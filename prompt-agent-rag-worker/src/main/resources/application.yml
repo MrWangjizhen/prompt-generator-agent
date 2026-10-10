@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: prompt-agent-rag-worker
+  autoconfigure:
+    exclude: org.springframework.ai.vectorstore.qdrant.autoconfigure.QdrantVectorStoreAutoConfiguration
+  profiles:
+    default: local
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/prompt_agent}
+  ai:
+    vectorstore:
+      qdrant:
+        enabled: false
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+      embedding:
+        options:
+          model: ${OLLAMA_EMBEDDING_MODEL:nomic-embed-text}
+    dashscope:
+      api-key: ${DASHSCOPE_API_KEY:local-placeholder}
+      embedding:
+        options:
+          model: ${BAILIAN_EMBEDDING_MODEL:text-embedding-v4}
+
+server:
+  port: ${PORT:8132}
+  address: 0.0.0.0
+
+app:
+  worker-token: ${RAG_WORKER_TOKEN:dev-worker-token}
+  qdrant:
+    host: ${QDRANT_HOST:localhost}
+    port: ${QDRANT_PORT:6334}
+    tls: ${QDRANT_TLS:false}
+    api-key: ${QDRANT_API_KEY:}
+    knowledge-collection: ${QDRANT_KNOWLEDGE_COLLECTION:prompt_knowledge_local_v1}
+  oss:
+    endpoint: ${OSS_ENDPOINT:}
+    bucket: ${OSS_BUCKET:}
+
+management:
+  endpoints.web.exposure.include: health,info,metrics
+  endpoint.health.probes.enabled: true

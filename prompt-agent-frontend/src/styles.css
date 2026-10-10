@@ -1,0 +1,80 @@
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #e8edf7;
+  background: #09100f;
+  font-synthesis: none;
+  --ink: #e8edf7;
+  --muted: #91a09d;
+  --panel: rgba(18, 29, 27, .86);
+  --line: rgba(184, 222, 211, .14);
+  --accent: #75f0c1;
+  --accent-ink: #062119;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; background: radial-gradient(circle at 70% 0, #18342d 0, #09100f 42%); }
+button, input, textarea, select { font: inherit; }
+button { cursor: pointer; }
+.auth-shell { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+.auth-card { width: min(540px, 100%); padding: 44px; border: 1px solid var(--line); background: var(--panel); border-radius: 28px; box-shadow: 0 28px 80px #0008; backdrop-filter: blur(18px); }
+.brand-mark { display: grid; place-items: center; width: 48px; height: 48px; color: var(--accent-ink); background: var(--accent); border-radius: 14px; font-weight: 900; font-size: 24px; }
+h1 { margin: 8px 0 12px; font-size: clamp(28px, 5vw, 48px); line-height: 1.08; letter-spacing: -.035em; }
+h2, h3, p { margin-top: 0; }
+.eyebrow { margin: 18px 0 6px; color: var(--accent); font-size: 11px; font-weight: 800; letter-spacing: .16em; }
+.muted { color: var(--muted); line-height: 1.7; }
+.auth-form { display: grid; gap: 16px; margin-top: 28px; }
+label { display: grid; gap: 8px; color: var(--muted); font-size: 13px; }
+input, textarea, select { width: 100%; color: var(--ink); background: #0c1514; border: 1px solid var(--line); border-radius: 12px; padding: 13px 14px; outline: none; }
+input:focus, textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px #75f0c118; }
+button { color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 11px; padding: 10px 14px; }
+button:hover { border-color: #75f0c177; }
+button:disabled { cursor: wait; opacity: .5; }
+.primary { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); font-weight: 800; }
+.link { padding: 8px 0; border: 0; color: var(--muted); background: transparent; }
+.danger, .error { color: #ff8f8f; }
+.app-shell { min-height: 100vh; display: grid; grid-template-columns: 270px 1fr; }
+.sidebar { position: sticky; top: 0; height: 100vh; padding: 26px 20px; display: flex; flex-direction: column; border-right: 1px solid var(--line); background: #091110dd; }
+.sidebar h2 { margin: 0; }
+.new-session { display: grid; gap: 9px; margin: 28px 0; }
+.session-list { display: grid; gap: 7px; overflow: auto; }
+.session-list button { display: flex; justify-content: space-between; text-align: left; }
+.session-list .active { border-color: var(--accent); background: #75f0c10d; }
+.session-list small { color: var(--muted); font-size: 9px; }
+.account { margin-top: auto; display: grid; gap: 2px; padding-top: 20px; border-top: 1px solid var(--line); }
+.workspace { position: relative; width: min(1100px, 100%); padding: 34px clamp(22px, 5vw, 70px) 100px; margin: 0 auto; }
+.workspace > header { display: flex; align-items: start; justify-content: space-between; gap: 24px; }
+.status { margin-top: 20px; padding: 7px 10px; color: var(--accent); border: 1px solid #75f0c144; border-radius: 99px; font-size: 11px; }
+.empty-state { min-height: 60vh; display: grid; place-content: center; text-align: center; color: var(--muted); }
+.conversation { display: grid; gap: 12px; margin: 28px 0; }
+.message { width: fit-content; max-width: 78%; white-space: pre-wrap; line-height: 1.7; padding: 14px 17px; border-radius: 16px; background: var(--panel); border: 1px solid var(--line); }
+.message.user { justify-self: end; color: var(--accent-ink); background: var(--accent); }
+.requirements, .admin-panel { margin: 24px 0; padding: 20px; border: 1px solid var(--line); border-radius: 18px; background: #101c1a; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips span { max-width: 100%; padding: 8px 10px; color: var(--muted); background: #07100f; border-radius: 8px; overflow-wrap: anywhere; }
+.chips b { color: var(--accent); margin-right: 5px; }
+.composer { position: sticky; bottom: 12px; z-index: 2; display: grid; grid-template-columns: 1fr auto; gap: 9px; padding: 12px; background: #0a1312ee; border: 1px solid var(--line); border-radius: 18px; backdrop-filter: blur(18px); }
+.composer textarea { grid-row: span 2; resize: vertical; }
+.confirm { color: var(--accent); border-color: #75f0c166; }
+.candidates { display: grid; gap: 18px; margin-top: 30px; }
+.candidate { padding: 24px; border: 1px solid var(--line); border-radius: 20px; background: var(--panel); }
+.candidate.selected { border-color: var(--accent); box-shadow: 0 0 0 3px #75f0c112; }
+.streaming .candidate { border-color: #75f0c144; }
+.cursor { color: var(--accent); animation: blink 1s steps(2, jump-none) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.candidate-head { display: flex; justify-content: space-between; gap: 20px; }
+.candidate-head span { color: var(--muted); font-size: 13px; }
+pre { margin: 18px 0; padding: 18px; white-space: pre-wrap; overflow-wrap: anywhere; color: #dce7e4; background: #07100f; border-radius: 12px; line-height: 1.65; }
+.actions, .export-actions, .upload { display: flex; gap: 9px; flex-wrap: wrap; }
+.admin-panel { margin-top: 60px; }
+.admin-panel ul { padding: 0; list-style: none; }
+.admin-panel li { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.notice, .floating { position: fixed; right: 24px; bottom: 24px; z-index: 4; padding: 12px 16px; border: 1px solid #75f0c155; border-radius: 12px; background: #10231f; box-shadow: 0 10px 30px #0008; }
+.floating { bottom: 76px; border-color: #ff8f8f55; background: #291414; }
+@media (max-width: 760px) {
+  .app-shell { grid-template-columns: 1fr; }
+  .sidebar { position: static; width: 100%; height: auto; }
+  .session-list { max-height: 150px; }
+  .workspace { padding: 24px 16px 90px; }
+  .composer { grid-template-columns: 1fr; }
+  .composer textarea { grid-row: auto; }
+  .message { max-width: 92%; }
+}

@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: prompt-engineering-mcp-server
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+  profiles:
+    default: sse
+  ai:
+    mcp:
+      server:
+        name: prompt-engineering-mcp-server
+        version: 0.1.0
+        type: SYNC
+        stdio: false
+
+server:
+  port: ${PORT:8131}
+  address: 0.0.0.0
+
+management:
+  endpoints.web.exposure.include: health,info,metrics
+  endpoint.health.probes.enabled: true

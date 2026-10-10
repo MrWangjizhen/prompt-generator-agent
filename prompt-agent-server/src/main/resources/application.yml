@@ -1,0 +1,119 @@
+spring:
+  application:
+    name: prompt-generator-agent
+  autoconfigure:
+    exclude:
+      - org.springframework.ai.vectorstore.qdrant.autoconfigure.QdrantVectorStoreAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+  profiles:
+    default: local
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/prompt_agent}
+      auto-index-creation: true
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 21MB
+  ai:
+    vectorstore:
+      qdrant:
+        enabled: false
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+      chat:
+        options:
+          model: ${OLLAMA_CHAT_MODEL:gemma3:1b}
+          temperature: 0.2
+      embedding:
+        options:
+          model: ${OLLAMA_EMBEDDING_MODEL:nomic-embed-text}
+    dashscope:
+      api-key: ${DASHSCOPE_API_KEY:local-placeholder}
+      chat:
+        options:
+          model: ${BAILIAN_CHAT_MODEL:qwen-plus}
+          temperature: 0.2
+      embedding:
+        options:
+          model: ${BAILIAN_EMBEDDING_MODEL:text-embedding-v4}
+    mcp:
+      client:
+        enabled: ${MCP_CLIENT_ENABLED:false}
+        request-timeout: 20s
+        type: SYNC
+
+server:
+  port: ${PORT:8123}
+  address: 0.0.0.0
+  forward-headers-strategy: framework
+  servlet:
+    context-path: /api
+
+agent:
+  memory:
+    enabled: true
+    commit-mode: sync
+    profile:
+      store: mongodb
+    long-term:
+      store: qdrant
+      index-store: mongodb
+      vector-store-bean-name: agentMemoryVectorStore
+      top-k: 5
+      similarity-threshold: 0.65
+    router:
+      model-bean-name: primaryChatModel
+    extractor:
+      model-bean-name: primaryChatModel
+    privacy:
+      require-consent: true
+      sensitive-filter-enabled: true
+
+app:
+  model:
+    tool-callbacks-enabled: ${MODEL_TOOL_CALLBACKS_ENABLED:false}
+  jwt:
+    secret: ${JWT_SECRET:local-development-secret-change-me-1234567890}
+    issuer: ${JWT_ISSUER:prompt-generator-agent}
+    access-ttl: 15m
+    refresh-ttl: 7d
+    cookie-secure: ${JWT_COOKIE_SECURE:false}
+  qdrant:
+    host: ${QDRANT_HOST:localhost}
+    port: ${QDRANT_PORT:6334}
+    tls: ${QDRANT_TLS:false}
+    api-key: ${QDRANT_API_KEY:}
+    memory-collection: ${QDRANT_MEMORY_COLLECTION:agent_memory_local_v1}
+    knowledge-collection: ${QDRANT_KNOWLEDGE_COLLECTION:prompt_knowledge_local_v1}
+  oss:
+    endpoint: ${OSS_ENDPOINT:}
+    bucket: ${OSS_BUCKET:}
+  rag:
+    worker-url: ${RAG_WORKER_URL:http://localhost:8132}
+    worker-token: ${RAG_WORKER_TOKEN:dev-worker-token}
+    top-k: 5
+    similarity-threshold: 0.65
+    max-upload-bytes: 20971520
+    async-invocation: ${RAG_WORKER_ASYNC:false}
+  search:
+    base-url: ${SEARCH_API_BASE_URL:}
+    api-key: ${SEARCH_API_KEY:}
+  security:
+    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+logging:
+  pattern:
+    console: '{"time":"%d{yyyy-MM-dd''T''HH:mm:ss.SSSXXX}","level":"%p","logger":"%logger{36}","message":"%replace(%m){''[\r\n]'','' ''}"}%n'
+  level:
+    org.springframework.ai: INFO

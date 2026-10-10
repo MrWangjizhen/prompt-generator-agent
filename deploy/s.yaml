@@ -1,0 +1,113 @@
+edition: 3.0.0
+name: prompt-generator-agent
+access: default
+validation: true
+
+vars:
+  region: ${env('FC_REGION')}
+  role: ${env('FC_ROLE_ARN')}
+
+resources:
+  promptApi:
+    component: fc3
+    props:
+      region: ${vars.region}
+      functionName: prompt-generator-agent-api
+      description: Guided prompt generation API
+      runtime: custom-container
+      role: ${vars.role}
+      timeout: 300
+      memorySize: 2048
+      cpu: 2
+      instanceConcurrency: 20
+      customContainerConfig:
+        image: ${env('API_IMAGE')}
+        port: 9000
+      environmentVariables:
+        PORT: "9000"
+        SPRING_PROFILES_ACTIVE: prod
+        MONGODB_URI: ${env('MONGODB_URI')}
+        QDRANT_HOST: ${env('QDRANT_HOST')}
+        QDRANT_PORT: ${env('QDRANT_PORT')}
+        QDRANT_TLS: "true"
+        QDRANT_API_KEY: ${env('QDRANT_API_KEY')}
+        DASHSCOPE_API_KEY: ${env('DASHSCOPE_API_KEY')}
+        MODEL_TOOL_CALLBACKS_ENABLED: "true"
+        JWT_SECRET: ${env('JWT_SECRET')}
+        OSS_ENDPOINT: ${env('OSS_ENDPOINT')}
+        OSS_BUCKET: ${env('OSS_BUCKET')}
+        RAG_WORKER_URL: ${env('RAG_WORKER_URL')}
+        RAG_WORKER_TOKEN: ${env('RAG_WORKER_TOKEN')}
+        RAG_WORKER_ASYNC: "true"
+        MCP_CLIENT_ENABLED: "true"
+        MCP_SERVER_URL: ${env('MCP_SERVER_URL')}
+        MCP_SERVER_TOKEN: ${env('MCP_SERVER_TOKEN')}
+        JWT_COOKIE_SECURE: "true"
+        ALLOWED_ORIGINS: ${env('ALLOWED_ORIGINS')}
+      triggers:
+        - triggerName: http
+          triggerType: http
+          triggerConfig:
+            authType: anonymous
+            methods: [GET, POST, PUT, DELETE, OPTIONS]
+
+  promptMcp:
+    component: fc3
+    props:
+      region: ${vars.region}
+      functionName: prompt-engineering-mcp
+      description: Prompt engineering MCP over SSE
+      runtime: custom-container
+      role: ${vars.role}
+      timeout: 300
+      memorySize: 1024
+      cpu: 1
+      instanceConcurrency: 50
+      sessionAffinity: MCP_SSE
+      sessionAffinityConfig: '{"sseEndpointPath":"/sse","sessionConcurrencyPerInstance":50}'
+      customContainerConfig:
+        image: ${env('MCP_IMAGE')}
+        port: 9000
+      environmentVariables:
+        PORT: "9000"
+        MCP_SERVER_TOKEN: ${env('MCP_SERVER_TOKEN')}
+      triggers:
+        - triggerName: http
+          triggerType: http
+          triggerConfig:
+            authType: anonymous
+            methods: [GET, POST]
+
+  ragWorker:
+    component: fc3
+    props:
+      region: ${vars.region}
+      functionName: prompt-rag-index-worker
+      description: Asynchronous RAG document indexing task
+      runtime: custom-container
+      role: ${vars.role}
+      timeout: 900
+      memorySize: 3072
+      cpu: 2
+      instanceConcurrency: 2
+      customContainerConfig:
+        image: ${env('WORKER_IMAGE')}
+        port: 9000
+      environmentVariables:
+        PORT: "9000"
+        SPRING_PROFILES_ACTIVE: prod
+        MONGODB_URI: ${env('MONGODB_URI')}
+        QDRANT_HOST: ${env('QDRANT_HOST')}
+        QDRANT_PORT: ${env('QDRANT_PORT')}
+        QDRANT_TLS: "true"
+        QDRANT_API_KEY: ${env('QDRANT_API_KEY')}
+        DASHSCOPE_API_KEY: ${env('DASHSCOPE_API_KEY')}
+        OSS_ENDPOINT: ${env('OSS_ENDPOINT')}
+        OSS_BUCKET: ${env('OSS_BUCKET')}
+        RAG_WORKER_TOKEN: ${env('RAG_WORKER_TOKEN')}
+      triggers:
+        - triggerName: http
+          triggerType: http
+          triggerConfig:
+            authType: anonymous
+            methods: [POST]

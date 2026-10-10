@@ -1,0 +1,45 @@
+{
+  "properties": [
+    {
+      "name": "agent.memory.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Whether Agent Memory auto-configuration is enabled.",
+      "defaultValue": true
+    },
+    {
+      "name": "agent.memory.profile.store",
+      "type": "io.github.agentmemory.AgentMemoryProperties$StoreType",
+      "description": "User profile store implementation.",
+      "defaultValue": "IN_MEMORY"
+    },
+    {
+      "name": "agent.memory.long-term.store",
+      "type": "io.github.agentmemory.AgentMemoryProperties$StoreType",
+      "description": "Long-term memory store implementation.",
+      "defaultValue": "IN_MEMORY"
+    },
+    {
+      "name": "agent.memory.long-term.index-store",
+      "type": "io.github.agentmemory.AgentMemoryProperties$IndexStoreType",
+      "description": "Long-term memory metadata index used for listing, export, and precise deletion.",
+      "defaultValue": "IN_MEMORY"
+    },
+    {
+      "name": "agent.memory.router.model-bean-name",
+      "type": "java.lang.String",
+      "description": "Optional ChatModel bean name used by the memory router."
+    },
+    {
+      "name": "agent.memory.extractor.model-bean-name",
+      "type": "java.lang.String",
+      "description": "Optional ChatModel bean name used by the memory extractor."
+    },
+    {
+      "name": "agent.memory.privacy.require-consent",
+      "type": "java.lang.Boolean",
+      "description": "Whether memory should only run when per-request consent is granted.",
+      "defaultValue": true
+    }
+  ]
+}
+

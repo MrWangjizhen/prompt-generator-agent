@@ -1,0 +1,9 @@
+spring:
+  ai:
+    ollama:
+      embedding:
+        enabled: false
+app:
+  qdrant:
+    tls: true
+    knowledge-collection: ${QDRANT_KNOWLEDGE_COLLECTION:prompt_knowledge_prod_v1}

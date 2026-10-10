@@ -1,0 +1,19 @@
+spring:
+  ai:
+    ollama:
+      chat:
+        enabled: false
+      embedding:
+        enabled: false
+
+app:
+  model:
+    tool-callbacks-enabled: ${MODEL_TOOL_CALLBACKS_ENABLED:true}
+  jwt:
+    cookie-secure: ${JWT_COOKIE_SECURE:true}
+  rag:
+    async-invocation: ${RAG_WORKER_ASYNC:true}
+  qdrant:
+    tls: true
+    memory-collection: ${QDRANT_MEMORY_COLLECTION:agent_memory_prod_v1}
+    knowledge-collection: ${QDRANT_KNOWLEDGE_COLLECTION:prompt_knowledge_prod_v1}
